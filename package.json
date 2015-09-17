@@ -4,7 +4,7 @@
   "description": "Transient exception handling",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha tests"
   },
   "repository": {
     "type": "git",
