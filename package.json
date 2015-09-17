@@ -1,0 +1,28 @@
+{
+  "name": "polly-js",
+  "version": "1.0.0",
+  "description": "Transient exception handling",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mauricedb/polly-js.git"
+  },
+  "keywords": [
+    "transient",
+    "exception",
+    "handling",
+    "error",
+    "try",
+    "catch",
+    "promise"
+  ],
+  "author": "Maurice de Beijer",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mauricedb/polly-js/issues"
+  },
+  "homepage": "https://github.com/mauricedb/polly-js#readme"
+}
