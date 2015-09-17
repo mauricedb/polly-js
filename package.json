@@ -24,5 +24,8 @@
   "bugs": {
     "url": "https://github.com/mauricedb/polly-js/issues"
   },
-  "homepage": "https://github.com/mauricedb/polly-js#readme"
+  "homepage": "https://github.com/mauricedb/polly-js#readme",
+  "devDependencies": {
+    "gulp": "^3.9.0"
+  }
 }
