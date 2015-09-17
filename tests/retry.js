@@ -17,5 +17,16 @@ describe('The retry policy', function () {
             });
 
         assert.equal(result, 42);
-    })
+    });
+
+    it('should throw after an error', function () {
+
+        assert.throws(function () {
+            polly
+                .retry().execute(function () {
+                    throw new Error("Wrong value");
+                });
+        }, /Wrong value/);
+    });
+
 });
