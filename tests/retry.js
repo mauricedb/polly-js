@@ -29,7 +29,7 @@ describe('The retry policy', function () {
         }, /Wrong value/);
     });
 
-    it('should retry once after an error', function () {
+    it('should retry once after an error and still fail', function () {
         var count = 0;
 
         try {
@@ -42,6 +42,23 @@ describe('The retry policy', function () {
         catch (ex) {
 
         }
+        assert.equal(count, 2);
+    });
+
+    it('should retry once after an error and succeed', function () {
+        var count = 0;
+
+        var result = polly
+            .retry().execute(function () {
+                count++;
+                if (count === 1) {
+                    throw new Error("Wrong value");
+                }
+
+                return 42;
+            });
+
+        assert.equal(result, 42);
         assert.equal(count, 2);
     });
 
