@@ -5,12 +5,28 @@
 module.exports = (function () {
 
     function execute(config, cb) {
-        return cb();
+        var count = 0;
+
+        while (true) {
+            try {
+                return cb();
+            }
+            catch (ex) {
+                if (count < config.count) {
+                    count++;
+                } else {
+                    throw ex;
+                }
+            }
+        }
     }
+
 
     return {
         retry: function () {
-            var config = {};
+            var config = {
+                count: 1
+            };
 
             return {
                 execute: execute.bind(null, config)
