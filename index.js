@@ -21,6 +21,28 @@ module.exports = (function () {
         }
     }
 
+    function executeAsync(config, cb) {
+        var count = 0;
+
+        return new Promise(function (resolve, reject) {
+            function execute() {
+                var original = cb();
+
+                original.then(function (e) {
+                    resolve(e);
+                }, function (e) {
+                    if (count < config.count) {
+                        count++;
+                        execute();
+                    } else {
+                        reject(e);
+                    }
+                })
+            }
+
+            execute();
+        });
+    }
 
     return {
         retry: function () {
@@ -29,7 +51,8 @@ module.exports = (function () {
             };
 
             return {
-                execute: execute.bind(null, config)
+                execute: execute.bind(null, config),
+                executeAsync: executeAsync.bind(null, config)
             };
         }
     }
