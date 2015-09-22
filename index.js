@@ -21,7 +21,7 @@ module.exports = (function () {
         }
     }
 
-    function executeAsync(config, cb) {
+    function executeForPromise(config, cb) {
         var count = 0;
 
         return new Promise(function (resolve, reject) {
@@ -52,7 +52,7 @@ module.exports = (function () {
 
             return {
                 execute: execute.bind(null, config),
-                executeAsync: executeAsync.bind(null, config)
+                executeForPromise: executeForPromise.bind(null, config)
             };
         }
     }

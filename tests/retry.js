@@ -71,7 +71,7 @@ describe('The retry policy', function () {
 
             polly
                 .retry()
-                .executeAsync(function () {
+                .executeForPromise(function () {
                     return Promise.resolve(42);
                 }).then(function (result) {
                     assert.equal(result, 42);
@@ -83,7 +83,7 @@ describe('The retry policy', function () {
 
             polly
                 .retry()
-                .executeAsync(function () {
+                .executeForPromise(function () {
                     return Promise.reject(new Error("Wrong value"));
                 }).catch(function (err) {
                     assert.ok(err instanceof Error);
@@ -97,7 +97,7 @@ describe('The retry policy', function () {
 
             polly
                 .retry()
-                .executeAsync(function () {
+                .executeForPromise(function () {
                     return new Promise(function (resolve, reject) {
                         count++;
                         reject(new Error("Wrong value"));
@@ -113,7 +113,7 @@ describe('The retry policy', function () {
 
             polly
                 .retry()
-                .executeAsync(function () {
+                .executeForPromise(function () {
                     return new Promise(function (resolve, reject) {
                         count++;
                         if (count === 1) {
