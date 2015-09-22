@@ -6,6 +6,7 @@ var assert = require('assert');
 var chai = require('chai');
 var chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
+chai.should();
 var requestPromise = require('request-promise');
 
 var polly = require('..');
