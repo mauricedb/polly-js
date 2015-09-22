@@ -3,7 +3,9 @@
  */
 
 var assert = require('assert');
-
+var chai = require('chai');
+var chaiAsPromised = require('chai-as-promised');
+chai.use(chaiAsPromised);
 var requestPromise = require('request-promise');
 
 var polly = require('..');
@@ -131,29 +133,30 @@ describe('The retry policy', function () {
                 });
         });
 
-        it('we can load html from Google', function (done) {
-
-            polly
-                .retry()
-                .executeForPromise(function () {
-                    return requestPromise('http://www.google.com');
-                }).then(function () {
-                    done();
-                });
-        });
-
-        it('we can\'t load html from am invalid URL', function (done) {
+        it('we can load html from Google', function () {
             var count = 0;
 
-            polly
+            return polly
+                .retry()
+                .executeForPromise(function () {
+                    count++;
+                    return requestPromise('http://www.google.com');
+                }).should.eventually.be.fulfilled.then(function () {
+                    count.should.equal(1);
+                })
+        });
+
+        it('we can\'t load html from am invalid URL', function () {
+            var count = 0;
+
+            return polly
                 .retry()
                 .executeForPromise(function () {
                     count++;
                     return requestPromise('http://www.this-is-no-site.com');
-                }).catch(function () {
-                    assert.equal(count, 2);
-                    done();
-                });
+                }).should.eventually.be.rejected.then(function () {
+                    count.should.equal(2);
+                })
         });
     });
 });
