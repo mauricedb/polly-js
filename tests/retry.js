@@ -4,6 +4,8 @@
 
 var assert = require('assert');
 
+var requestPromise = require('request-promise');
+
 var polly = require('..');
 
 describe('The retry policy', function () {
@@ -124,6 +126,31 @@ describe('The retry policy', function () {
                     });
                 }).then(function (result) {
                     assert.equal(result, 42);
+                    assert.equal(count, 2);
+                    done();
+                });
+        });
+
+        it('we can load html from Google', function (done) {
+
+            polly
+                .retry()
+                .executeForPromise(function () {
+                    return requestPromise('http://www.google.com');
+                }).then(function () {
+                    done();
+                });
+        });
+
+        it('we can\'t load html from am invalid URL', function (done) {
+            var count = 0;
+
+            polly
+                .retry()
+                .executeForPromise(function () {
+                    count++;
+                    return requestPromise('http://www.this-is-no-site.com');
+                }).catch(function () {
                     assert.equal(count, 2);
                     done();
                 });
