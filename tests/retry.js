@@ -22,7 +22,7 @@ describe('The retry policy', function () {
                     return 42;
                 });
 
-            assert.equal(result, 42);
+            result.should.equal(42);
         });
 
         it('should throw after an error', function () {
@@ -48,9 +48,9 @@ describe('The retry policy', function () {
                     });
             }
             catch (ex) {
-
             }
-            assert.equal(count, 2);
+
+            count.should.equal(2);
         });
 
         it('should retry once after an error and succeed', function () {
@@ -66,22 +66,20 @@ describe('The retry policy', function () {
                     return 42;
                 });
 
-            assert.equal(result, 42);
-            assert.equal(count, 2);
+            result.should.equal(42);
+            count.should.equal(2);
         });
     });
 
     describe('with a asynchronous call', function () {
-        it('should return the result when no error', function (done) {
+        it('should return the result when no error', function () {
 
-            polly
+            return polly
                 .retry()
                 .executeForPromise(function () {
                     return Promise.resolve(42);
-                }).then(function (result) {
-                    assert.equal(result, 42);
-                    done();
-                });
+                })
+                .should.eventually.equal(42);
         });
 
         it('should reject after an error', function () {
