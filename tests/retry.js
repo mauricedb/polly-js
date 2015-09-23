@@ -148,7 +148,7 @@ describe('The retry policy', function () {
                 })
         });
 
-        it('we can\'t load html from am invalid URL', function () {
+        it('we can\'t load html from an invalid URL', function () {
             var count = 0;
 
             return polly
