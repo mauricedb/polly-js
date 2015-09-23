@@ -113,10 +113,10 @@ describe('The retry policy', function () {
                 });
         });
 
-        it('should retry once after an error and succeed', function (done) {
+        it('should retry once after an error and succeed', function () {
             var count = 0;
 
-            polly
+            return polly
                 .retry()
                 .executeForPromise(function () {
                     return new Promise(function (resolve, reject) {
@@ -127,11 +127,12 @@ describe('The retry policy', function () {
                             resolve(42);
                         }
                     });
-                }).then(function (result) {
-                    assert.equal(result, 42);
-                    assert.equal(count, 2);
-                    done();
+                })
+                .should.eventually.equal(42)
+                .then(function () {
+                    count.should.equal(2);
                 });
+
         });
 
         it('we can load html from Google', function () {
@@ -142,7 +143,9 @@ describe('The retry policy', function () {
                 .executeForPromise(function () {
                     count++;
                     return requestPromise('http://www.google.com');
-                }).should.eventually.be.fulfilled.then(function () {
+                })
+                .should.eventually.be.fulfilled
+                .then(function () {
                     count.should.equal(1);
                 })
         });
@@ -155,7 +158,9 @@ describe('The retry policy', function () {
                 .executeForPromise(function () {
                     count++;
                     return requestPromise('http://www.this-is-no-site.com');
-                }).should.eventually.be.rejected.then(function () {
+                })
+                .should.eventually.be.rejected
+                .then(function () {
                     count.should.equal(2);
                 })
         });
