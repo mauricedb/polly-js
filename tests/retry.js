@@ -84,32 +84,32 @@ describe('The retry policy', function () {
                 });
         });
 
-        it('should reject after an error', function (done) {
+        it('should reject after an error', function () {
 
-            polly
+            return polly
                 .retry()
                 .executeForPromise(function () {
                     return Promise.reject(new Error("Wrong value"));
-                }).catch(function (err) {
-                    assert.ok(err instanceof Error);
-                    assert.equal(err.message, "Wrong value");
-                    done();
-                });
+                })
+                .should.eventually
+                .be.rejectedWith(Error, 'Wrong value');
         });
 
-        it('should retry once after an error and still fail', function (done) {
+        it('should retry once after an error and still fail', function () {
             var count = 0;
 
-            polly
+            return polly
                 .retry()
                 .executeForPromise(function () {
                     return new Promise(function (resolve, reject) {
                         count++;
                         reject(new Error("Wrong value"));
                     });
-                }).catch(function (err) {
-                    assert.equal(count, 2);
-                    done();
+                })
+                .should.eventually
+                .be.rejected
+                .then(function () {
+                    count.should.equal(2);
                 });
         });
 
