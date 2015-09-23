@@ -2,12 +2,12 @@
  * Created by maurice on 9/17/2015.
  */
 
-var assert = require('assert');
 var chai = require('chai');
 var chaiAsPromised = require('chai-as-promised');
+var requestPromise = require('request-promise');
+
 chai.use(chaiAsPromised);
 chai.should();
-var requestPromise = require('request-promise');
 
 var polly = require('..');
 
@@ -27,13 +27,13 @@ describe('The retry policy', function () {
 
         it('should throw after an error', function () {
 
-            assert.throws(function () {
+            (function() {
                 polly
                     .retry()
                     .execute(function () {
                         throw new Error("Wrong value");
                     });
-            }, /Wrong value/);
+            }).should.Throw(Error, 'Wrong value');
         });
 
         it('should retry once after an error and still fail', function () {
