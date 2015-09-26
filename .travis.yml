@@ -3,3 +3,5 @@ node_js:
   - "node"
   - "iojs"
   - "0.12"
+after_success:
+  - npm run report-coverage
