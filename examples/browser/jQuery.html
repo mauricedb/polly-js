@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+<h2>Using polly-js with jQuery</h2>
+<button id="btnWillPass">Load users from valid exiting site</button>
+<button id="btnWillFail">Load users from non exiting site</button>
+
+<ul id="result"></ul>
+
+<script src="//code.jquery.com/jquery.js"></script>
+<script src="../../src/polly.js"></script>
+
+<script>
+    $(function () {
+
+        function log(text) {
+            $('<li>')
+                    .text(text)
+                    .appendTo('#result');
+
+        }
+
+        function loadUsers(url){
+            polly
+                .retry(5)
+                .executeForPromise(function () {
+                    log('About to try and load users.');
+                    return $.getJSON(url);
+                })
+                .then(function (result) {
+                    log('Success: Loaded ' + result.length + ' users.');
+                }, function (err) {
+                    log('Error: Failed to load users.');
+                });
+        }
+
+        $('#btnWillPass').click(function () {
+            loadUsers('http://jsonplaceholder.typicode.com/users');
+        });
+
+        $('#btnWillFail').click(function () {
+            loadUsers('http://www.this-is-no-site.com/users');
+        });
+    });
+</script>
+</body>
+</html>
