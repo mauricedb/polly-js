@@ -27,3 +27,8 @@ polly
         console.error('Failed trying three times', err)
     });
 ```
+
+
+## Acknowledgements
+
+The library is based on the [Polly NuGet package](https://www.nuget.org/packages/Polly/) by Michael Wolfenden
