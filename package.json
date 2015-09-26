@@ -2,7 +2,7 @@
   "name": "polly-js",
   "version": "1.0.0",
   "description": "Transient exception handling",
-  "main": "index.js",
+  "main": "src/polly.js",
   "scripts": {
     "test": "mocha tests",
     "test:watch": "npm test -- --watch"
