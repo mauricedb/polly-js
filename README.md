@@ -1,9 +1,11 @@
 # polly-js
 Transient exception handling for JavaScript
 
-[![NPM](https://nodei.co/npm/polly-js.png)](https://npmjs.org/package/polly-js)
+[![npm version](https://img.shields.io/npm/v/polly-js.svg?style=flat-square)](https://www.npmjs.org/package/polly-js)
+[![npm downloads](https://img.shields.io/npm/dm/polly-jst.svg?style=flat-square)](http://npm-stat.com/charts.html?package=polly-js&from=2015-09-01)
 [![Dependency Status](https://david-dm.org/mauricedb/polly-js.svg)](https://david-dm.org/mauricedb/polly-js)
 [![Build Status](https://travis-ci.org/mauricedb/polly-js.svg?branch=master)](https://travis-ci.org/mauricedb/polly-js)
+[![codecov.io](http://codecov.io/github/mauricedb/polly-js/coverage.svg?branch=master)](http://codecov.io/github/mauricedb/polly-js?branch=master)
 
 Polly-js is a library to help developers recover from transient errors using policies like retry or wait and retry.
 
@@ -18,7 +20,6 @@ Try to load the Google home page and rety twice if it fails
 polly
     .retry(2)
     .executeForPromise(function () {
-        count++;
         return requestPromise('http://www.google.com');
     })
     .then(function(result) {
