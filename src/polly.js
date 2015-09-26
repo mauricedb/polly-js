@@ -45,9 +45,9 @@ module.exports = (function () {
     }
 
     return {
-        retry: function () {
+        retry: function (count) {
             var config = {
-                count: 1
+                count: count || 1
             };
 
             return {

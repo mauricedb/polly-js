@@ -53,11 +53,29 @@ describe('The retry policy', function () {
             count.should.equal(2);
         });
 
+        it('should retry five times after an error and still fail', function () {
+            var count = 0;
+
+            try {
+                polly
+                    .retry(5)
+                    .execute(function () {
+                        count++;
+                        throw new Error("Wrong value");
+                    });
+            }
+            catch (ex) {
+            }
+
+            count.should.equal(6);
+        });
+
         it('should retry once after an error and succeed', function () {
             var count = 0;
 
             var result = polly
-                .retry().execute(function () {
+                .retry()
+                .execute(function () {
                     count++;
                     if (count === 1) {
                         throw new Error("Wrong value");
@@ -68,6 +86,24 @@ describe('The retry policy', function () {
 
             result.should.equal(42);
             count.should.equal(2);
+        });
+
+        it('should retry four after an error and succeed', function () {
+            var count = 0;
+
+            var result = polly
+                .retry(5)
+                .execute(function () {
+                    count++;
+                    if (count < 5) {
+                        throw new Error("Wrong value");
+                    }
+
+                    return 42;
+                });
+
+            result.should.equal(42);
+            count.should.equal(5);
         });
     });
 
@@ -111,6 +147,24 @@ describe('The retry policy', function () {
                 });
         });
 
+        it('should retry five times after an error and still fail', function () {
+            var count = 0;
+
+            return polly
+                .retry(5)
+                .executeForPromise(function () {
+                    return new Promise(function (resolve, reject) {
+                        count++;
+                        reject(new Error("Wrong value"));
+                    });
+                })
+                .should.eventually
+                .be.rejected
+                .then(function () {
+                    count.should.equal(6);
+                });
+        });
+
         it('should retry once after an error and succeed', function () {
             var count = 0;
 
@@ -130,7 +184,27 @@ describe('The retry policy', function () {
                 .then(function () {
                     count.should.equal(2);
                 });
+        });
 
+       it('should retry four times after an error and succeed', function () {
+            var count = 0;
+
+            return polly
+                .retry(5)
+                .executeForPromise(function () {
+                    return new Promise(function (resolve, reject) {
+                        count++;
+                        if (count < 5) {
+                            reject(new Error("Wrong value"));
+                        } else {
+                            resolve(42);
+                        }
+                    });
+                })
+                .should.eventually.equal(42)
+                .then(function () {
+                    count.should.equal(5);
+                });
         });
 
         it('we can load html from Google', function () {
