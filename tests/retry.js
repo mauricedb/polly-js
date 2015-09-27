@@ -2,6 +2,8 @@
  * Created by maurice on 9/17/2015.
  */
 
+'use strict';
+
 var chai = require('chai');
 var chaiAsPromised = require('chai-as-promised');
 var requestPromise = require('request-promise');
