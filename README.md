@@ -29,6 +29,19 @@ polly
     });
 ```
 
+```JavaScript
+polly
+    .retry(2)
+    .executeForNode(function (cb) {
+        fs.readFile(path.join(__dirname, './hello.txt'), cb);
+    }, function (err, data) {
+        if (err) {
+            console.error('Failed trying three times', err)
+        } else {
+            console.log(data)
+        }
+    });
+```
 
 ## Acknowledgements
 
