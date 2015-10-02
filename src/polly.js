@@ -58,6 +58,14 @@
         });
     }
 
+    function executeForNode(config, fn, callback) {
+        function internalCallback(err, data) {
+            callback(err, data);
+        }
+
+        fn(internalCallback);
+    }
+
     return {
         retry: function (count) {
             var config = {
@@ -66,7 +74,8 @@
 
             return {
                 execute: execute.bind(null, config),
-                executeForPromise: executeForPromise.bind(null, config)
+                executeForPromise: executeForPromise.bind(null, config),
+                executeForNode: executeForNode.bind(null, config)
             };
         }
     }
