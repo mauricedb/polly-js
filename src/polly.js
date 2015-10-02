@@ -59,8 +59,16 @@
     }
 
     function executeForNode(config, fn, callback) {
+        var count = 0;
+
         function internalCallback(err, data) {
-            callback(err, data);
+            if (count < config.count) {
+                count++;
+                fn(internalCallback);
+            } else {
+                callback(err, data);
+
+            }
         }
 
         fn(internalCallback);

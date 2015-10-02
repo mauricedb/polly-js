@@ -7,67 +7,69 @@ var fs = require('fs');
 var path = require('path');
 
 chai.use(chaiAsPromised);
-chai.should();
+var should = chai.should();
 
 var polly = require('..');
 
 describe('The retry policy with a asynchronous node call', function () {
-    it('should return the result when no error', function () {
+    it('should return the result when no error', function (done) {
 
-        return polly
+polly
+    .retry()
+    .executeForNode(function (cb) {
+        fs.readFile(path.join(__dirname, './hello.txt'), cb);
+    }, function (err, data) {
+        should.not.exist(err);
+        data.toString().should.equal('Hello world');
+        done();
+    });
+    });
+
+    it('should reject after an error', function (done) {
+
+        polly
             .retry()
             .executeForNode(function (cb) {
-                fs.readFile(path.join(__dirname, './hello.txt'), cb);
-            }, function(err, data){
-                err.should.be.null();
-                data.toString().should.be('Hello world');
+                fs.readFile(path.join(__dirname, './not-there.txt'), cb);
+            }, function (err, data) {
+                should.exist(err);
+                err.should.be.instanceof(Error);
+                should.not.exist(data);
+                done();
             });
     });
 
-    it.skip('should reject after an error', function () {
-
-        return polly
-            .retry()
-            .executeForPromise(function () {
-                return Promise.reject(new Error("Wrong value"));
-            })
-            .should.eventually
-            .be.rejectedWith(Error, 'Wrong value');
-    });
-
-    it.skip('should retry once after an error and still fail', function () {
+    it('should retry once after an error and still fail', function (done) {
         var count = 0;
 
-        return polly
+        polly
             .retry()
-            .executeForPromise(function () {
-                return new Promise(function (resolve, reject) {
-                    count++;
-                    reject(new Error("Wrong value"));
-                });
-            })
-            .should.eventually
-            .be.rejected
-            .then(function () {
+            .executeForNode(function (cb) {
+                count++;
+                fs.readFile(path.join(__dirname, './not-there.txt'), cb);
+            }, function (err, data) {
+                should.exist(err);
+                err.should.be.instanceof(Error);
+                should.not.exist(data);
                 count.should.equal(2);
+                done();
             });
     });
 
-    it.skip('should retry five times after an error and still fail', function () {
+    it('should retry five times after an error and still fail', function (done) {
         var count = 0;
 
-        return polly
+        polly
             .retry(5)
-            .executeForPromise(function () {
-                return new Promise(function (resolve, reject) {
-                    count++;
-                    reject(new Error("Wrong value"));
-                });
-            })
-            .should.eventually
-            .be.rejected
-            .then(function () {
+            .executeForNode(function (cb) {
+                count++;
+                fs.readFile(path.join(__dirname, './not-there.txt'), cb);
+            }, function (err, data) {
+                should.exist(err);
+                err.should.be.instanceof(Error);
+                should.not.exist(data);
                 count.should.equal(6);
+                done();
             });
     });
 
