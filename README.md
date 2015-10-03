@@ -1,5 +1,5 @@
 # polly-js
-Transient exception handling for JavaScript
+Transient exception handling for JavaScript made easy.
 
 [![npm version](https://img.shields.io/npm/v/polly-js.svg?style=flat-square)](https://www.npmjs.org/package/polly-js)
 [![npm downloads](https://img.shields.io/npm/dm/polly-js.svg?style=flat-square)](http://npm-stat.com/charts.html?package=polly-js&from=2015-09-01)
@@ -14,7 +14,7 @@ Polly-js is a library to help developers recover from transient errors using pol
 
 ## Usage
 
-Try to load the Google home page and rety twice if it fails
+Try to load the Google home page and retry twice if it fails
 
 ```JavaScript
 polly
