@@ -11,18 +11,18 @@ var should = chai.should();
 
 var polly = require('..');
 
-describe('The retry policy with a asynchronous node call', function () {
-    it('should return the result when no error', function (done) {
+describe('The retry policy with a asynchronous node call', () => {
+    it('should return the result when no error', done => {
 
-polly
-    .retry()
-    .executeForNode(function (cb) {
-        fs.readFile(path.join(__dirname, './hello.txt'), cb);
-    }, function (err, data) {
-        should.not.exist(err);
-        data.toString().should.equal('Hello world');
-        done();
-    });
+        polly
+            .retry()
+            .executeForNode(cb => {
+                fs.readFile(path.join(__dirname, './hello.txt'), cb);
+            }, (err, data) => {
+                should.not.exist(err);
+                data.toString().should.equal('Hello world');
+                done();
+            });
     });
 
     it('should reject after an error', function (done) {
@@ -73,45 +73,44 @@ polly
             });
     });
 
-    it.skip('should retry once after an error and succeed', function () {
+    it('should retry once after an error and succeed', function (done) {
         var count = 0;
 
-        return polly
+        polly
             .retry()
-            .executeForPromise(function () {
-                return new Promise(function (resolve, reject) {
-                    count++;
-                    if (count === 1) {
-                        reject(new Error("Wrong value"));
-                    } else {
-                        resolve(42);
-                    }
-                });
-            })
-            .should.eventually.equal(42)
-            .then(function () {
+            .executeForNode(function (cb) {
+
+                count++;
+                if (count === 1) {
+                    cb(new Error("Wrong value"));
+                } else {
+                    cb(undefined, 42);
+                }
+            }, function (err, data) {
+                should.not.exist(err);
+                data.should.equal(42);
                 count.should.equal(2);
+                done();
             });
     });
 
-    it.skip('should retry four times after an error and succeed', function () {
+    it('should retry four times after an error and succeed', done => {
         var count = 0;
 
-        return polly
+        polly
             .retry(5)
-            .executeForPromise(function () {
-                return new Promise(function (resolve, reject) {
-                    count++;
-                    if (count < 5) {
-                        reject(new Error("Wrong value"));
-                    } else {
-                        resolve(42);
-                    }
-                });
-            })
-            .should.eventually.equal(42)
-            .then(function () {
+            .executeForNode( cb => {
+                count++;
+                if (count < 5) {
+                    cb(new Error("Wrong value"));
+                } else {
+                    cb(undefined, 42);
+                }
+            }, (err, data) => {
+                should.not.exist(err);
+                data.should.equal(42);
                 count.should.equal(5);
+                done();
             });
     });
 
@@ -122,7 +121,7 @@ polly
             .retry()
             .executeForPromise(function () {
                 count++;
-                return requestPromise('http://www.google.com');
+                return fetch('http://www.google.com');
             })
             .should.eventually.be.fulfilled
             .then(function () {

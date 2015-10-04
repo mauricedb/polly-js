@@ -62,7 +62,7 @@
         var count = 0;
 
         function internalCallback(err, data) {
-            if (count < config.count) {
+            if (err && count < config.count) {
                 count++;
                 fn(internalCallback);
             } else {
