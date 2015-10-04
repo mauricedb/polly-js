@@ -11,14 +11,14 @@ var should = chai.should();
 
 var polly = require('..');
 
-describe('The retry policy with a asynchronous node call', () => {
-    it('should return the result when no error', done => {
+describe('The retry policy with a asynchronous node call', function () {
+    it('should return the result when no error', function (done) {
 
         polly
             .retry()
-            .executeForNode(cb => {
+            .executeForNode(function (cb) {
                 fs.readFile(path.join(__dirname, './hello.txt'), cb);
-            }, (err, data) => {
+            }, function (err, data) {
                 should.not.exist(err);
                 data.toString().should.equal('Hello world');
                 done();
@@ -94,19 +94,19 @@ describe('The retry policy with a asynchronous node call', () => {
             });
     });
 
-    it('should retry four times after an error and succeed', done => {
+    it('should retry four times after an error and succeed', function(done ) {
         var count = 0;
 
         polly
             .retry(5)
-            .executeForNode( cb => {
+            .executeForNode(function (cb) {
                 count++;
                 if (count < 5) {
                     cb(new Error("Wrong value"));
                 } else {
                     cb(undefined, 42);
                 }
-            }, (err, data) => {
+            }, function(err, data)  {
                 should.not.exist(err);
                 data.should.equal(42);
                 count.should.equal(5);
