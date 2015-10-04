@@ -113,34 +113,4 @@ describe('The retry policy with a asynchronous node call', function () {
                 done();
             });
     });
-
-    it.skip('we can load html from Google', function () {
-        var count = 0;
-
-        return polly
-            .retry()
-            .executeForPromise(function () {
-                count++;
-                return fetch('http://www.google.com');
-            })
-            .should.eventually.be.fulfilled
-            .then(function () {
-                count.should.equal(1);
-            })
-    });
-
-    it.skip('we can\'t load html from an invalid URL', function () {
-        var count = 0;
-
-        return polly
-            .retry()
-            .executeForPromise(function () {
-                count++;
-                return requestPromise('http://www.this-is-no-site.com');
-            })
-            .should.eventually.be.rejected
-            .then(function () {
-                count.should.equal(2);
-            })
-    });
 });
