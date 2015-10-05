@@ -58,6 +58,30 @@
         });
     }
 
+    function executeForPromiseWithDelay(config, cb) {
+
+        return new Promise(function (resolve, reject) {
+            function execute() {
+                var original = cb();
+
+                original.then(function (e) {
+                    resolve(e);
+                }, function (e) {
+                    var delay = config.delays.pop();
+
+                    if (delay) {
+                        setTimeout(execute, delay);
+                    } else {
+                        reject(e);
+                    }
+                })
+            }
+
+            execute();
+        });
+    }
+
+
     function executeForNode(config, fn, callback) {
         var count = 0;
 
@@ -83,6 +107,16 @@
             return {
                 execute: execute.bind(null, config),
                 executeForPromise: executeForPromise.bind(null, config),
+                executeForNode: executeForNode.bind(null, config)
+            };
+        },
+        waitAndRetry: function () {
+            var config = {
+                delays: [100]
+            };
+
+            return {
+                executeForPromise: executeForPromiseWithDelay.bind(null, config),
                 executeForNode: executeForNode.bind(null, config)
             };
         }
