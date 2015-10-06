@@ -93,11 +93,32 @@ describe('The wait and retry policy with a asynchronous promise call', function 
             });
     });
 
-    it('should retry four times after an error and succeed', function () {
+    it('should retry four times specifying delays after an error and succeed', function () {
         var count = 0;
 
         return polly
             .waitAndRetry([1, 1, 1, 1, 1])
+            .executeForPromise(function () {
+                return new Promise(function (resolve, reject) {
+                    count++;
+                    if (count < 5) {
+                        reject(new Error("Wrong value"));
+                    } else {
+                        resolve(42);
+                    }
+                });
+            })
+            .should.eventually.equal(42)
+            .then(function () {
+                count.should.equal(5);
+            });
+    });
+
+    it('should retry four times specifying the number after an error and succeed', function () {
+        var count = 0;
+
+        return polly
+            .waitAndRetry(5)
             .executeForPromise(function () {
                 return new Promise(function (resolve, reject) {
                     count++;

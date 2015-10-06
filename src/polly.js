@@ -102,6 +102,17 @@
         delay: 100
     };
 
+    function delayCountToDelays(count){
+        var delays = [], delay = defaults.delay;
+
+        for (var i = 0; i < count; i++) {
+            delays.push(delay);
+            delay = 2 * delay;
+        }
+
+        return delays;
+    }
+
     return {
         defaults: defaults,
         retry: function (count) {
@@ -116,8 +127,16 @@
             };
         },
         waitAndRetry: function (delays) {
+            if (Number.isInteger(delays)) {
+                delays = delayCountToDelays(delays);
+            }
+
+            if (!Array.isArray(delays)) {
+                delays = [defaults.delay];
+            }
+
             var config = {
-                delays: delays || [defaults.delay]
+                delays: delays
             };
 
             return {
