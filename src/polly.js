@@ -67,7 +67,7 @@
                 original.then(function (e) {
                     resolve(e);
                 }, function (e) {
-                    var delay = config.delays.pop();
+                    var delay = config.delays.shift();
 
                     if (delay) {
                         setTimeout(execute, delay);
@@ -98,7 +98,12 @@
         fn(internalCallback);
     }
 
+    var defaults = {
+        delay: 100
+    };
+
     return {
+        defaults: defaults,
         retry: function (count) {
             var config = {
                 count: count || 1
@@ -110,9 +115,9 @@
                 executeForNode: executeForNode.bind(null, config)
             };
         },
-        waitAndRetry: function () {
+        waitAndRetry: function (delays) {
             var config = {
-                delays: [100]
+                delays: delays || [defaults.delay]
             };
 
             return {

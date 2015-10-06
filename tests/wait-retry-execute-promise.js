@@ -10,6 +10,11 @@ chai.should();
 var polly = require('..');
 
 describe('The wait and retry policy with a asynchronous promise call', function () {
+
+    beforeEach(function() {
+        polly.defaults.delay = 1;
+    });
+
     it('should return the result when no error', function () {
 
         return polly
@@ -31,7 +36,7 @@ describe('The wait and retry policy with a asynchronous promise call', function 
             .be.rejectedWith(Error, 'Wrong value');
     });
 
-    it.skip('should retry once after an error and still fail', function () {
+    it('should retry once after an error and still fail', function () {
         var count = 0;
 
         return polly
@@ -49,11 +54,11 @@ describe('The wait and retry policy with a asynchronous promise call', function 
             });
     });
 
-    it.skip('should retry five times after an error and still fail', function () {
+    it('should retry five times after an error and still fail', function () {
         var count = 0;
 
         return polly
-            .waitAndRetry([1,1,1,1,1])
+            .waitAndRetry([1, 1, 1, 1, 1])
             .executeForPromise(function () {
                 return new Promise(function (resolve, reject) {
                     count++;
@@ -67,7 +72,7 @@ describe('The wait and retry policy with a asynchronous promise call', function 
             });
     });
 
-    it.skip('should retry once after an error and succeed', function () {
+    it('should retry once after an error and succeed', function () {
         var count = 0;
 
         return polly
@@ -88,11 +93,11 @@ describe('The wait and retry policy with a asynchronous promise call', function 
             });
     });
 
-    it.skip('should retry four times after an error and succeed', function () {
+    it('should retry four times after an error and succeed', function () {
         var count = 0;
 
         return polly
-            .waitAndRetry([1,1,1,1,1])
+            .waitAndRetry([1, 1, 1, 1, 1])
             .executeForPromise(function () {
                 return new Promise(function (resolve, reject) {
                     count++;
@@ -109,7 +114,7 @@ describe('The wait and retry policy with a asynchronous promise call', function 
             });
     });
 
-    it.skip('we can load html from Google', function () {
+    it('we can load html from Google', function () {
         var count = 0;
 
         return polly
@@ -124,7 +129,7 @@ describe('The wait and retry policy with a asynchronous promise call', function 
             })
     });
 
-    it.skip('we can\'t load html from an invalid URL', function () {
+    it('we can\'t load html from an invalid URL', function () {
         var count = 0;
 
         return polly
