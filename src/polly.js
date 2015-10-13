@@ -98,6 +98,22 @@
         fn(internalCallback);
     }
 
+    function executeForNodeWithDelay(config, fn, callback) {
+
+        function internalCallback(err, data) {
+            var delay = config.delays.shift();
+            if (err && delay) {
+                setTimeout(function () {
+                    fn(internalCallback);
+                }, delay);
+            } else {
+                callback(err, data);
+            }
+        }
+
+        fn(internalCallback);
+    }
+
     var defaults = {
         delay: 100
     };
@@ -141,7 +157,7 @@
 
             return {
                 executeForPromise: executeForPromiseWithDelay.bind(null, config),
-                executeForNode: executeForNode.bind(null, config)
+                executeForNode: executeForNodeWithDelay.bind(null, config)
             };
         }
     }
