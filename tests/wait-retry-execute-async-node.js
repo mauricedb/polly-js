@@ -17,7 +17,7 @@ describe('The wait and retry policy with a asynchronous node call', function () 
 
     it('should return the result when no error', function (done) {
 
-        polly
+        polly()
             .waitAndRetry()
             .executeForNode(function (cb) {
                 fs.readFile(path.join(__dirname, './hello.txt'), cb);
@@ -30,7 +30,7 @@ describe('The wait and retry policy with a asynchronous node call', function () 
 
     it('should reject after an error', function (done) {
 
-        polly
+        polly()
             .waitAndRetry()
             .executeForNode(function (cb) {
                 fs.readFile(path.join(__dirname, './not-there.txt'), cb);
@@ -45,7 +45,7 @@ describe('The wait and retry policy with a asynchronous node call', function () 
     it('should retry once after an error and still fail', function (done) {
         var count = 0;
 
-        polly
+        polly()
             .waitAndRetry()
             .executeForNode(function (cb) {
                 count++;
@@ -62,7 +62,7 @@ describe('The wait and retry policy with a asynchronous node call', function () 
     it('should retry five times after an error and still fail', function (done) {
         var count = 0;
 
-        polly
+        polly()
             .waitAndRetry([1, 1, 1, 1, 1])
             .executeForNode(function (cb) {
                 count++;
@@ -79,7 +79,7 @@ describe('The wait and retry policy with a asynchronous node call', function () 
     it('should retry five times after an error and still fail', function (done) {
         var count = 0;
 
-        polly
+        polly()
             .waitAndRetry(5)
             .executeForNode(function (cb) {
                 count++;
@@ -96,7 +96,7 @@ describe('The wait and retry policy with a asynchronous node call', function () 
     it('should retry once after an error and succeed', function (done) {
         var count = 0;
 
-        polly
+        polly()
             .waitAndRetry()
             .executeForNode(function (cb) {
 
@@ -117,7 +117,7 @@ describe('The wait and retry policy with a asynchronous node call', function () 
     it('should retry four times after an error and succeed', function (done) {
         var count = 0;
 
-        polly
+        polly()
             .waitAndRetry(5)
             .executeForNode(function (cb) {
                 count++;
@@ -130,6 +130,46 @@ describe('The wait and retry policy with a asynchronous node call', function () 
                 should.not.exist(err);
                 data.should.equal(42);
                 count.should.equal(5);
+                done();
+            });
+    });
+
+    it('should retry once because we are handling the no such file or directory error', function (done) {
+        var count = 0;
+
+        polly()
+            .handle(function(err) {
+                return err.code === 'ENOENT'
+            })
+            .waitAndRetry()
+            .executeForNode(function (cb) {
+                count++;
+                fs.readFile(path.join(__dirname, './not-there.txt'), cb);
+            }, function (err, data) {
+                should.exist(err);
+                err.should.be.instanceof(Error);
+                should.not.exist(data);
+                count.should.equal(2);
+                done();
+            });
+    });
+
+    it('should not retry because we are not handling the no such file or directory error', function (done) {
+        var count = 0;
+
+        polly()
+            .handle(function(err) {
+                return err.code !== 'ENOENT'
+            })
+            .waitAndRetry()
+            .executeForNode(function (cb) {
+                count++;
+                fs.readFile(path.join(__dirname, './not-there.txt'), cb);
+            }, function (err, data) {
+                should.exist(err);
+                err.should.be.instanceof(Error);
+                should.not.exist(data);
+                count.should.equal(1);
                 done();
             });
     });

@@ -6,7 +6,7 @@ var polly = require('..');
 describe('The retry policy with a synchronous call', function () {
     it('should return the result when no error', function () {
 
-        var result = polly
+        var result = polly()
             .retry()
             .execute(function () {
                 return 42;
@@ -18,7 +18,7 @@ describe('The retry policy with a synchronous call', function () {
     it('should throw after an error', function () {
 
         (function () {
-            polly
+            polly()
                 .retry()
                 .execute(function () {
                     throw new Error("Wrong value");
@@ -30,7 +30,7 @@ describe('The retry policy with a synchronous call', function () {
         var count = 0;
 
         try {
-            polly
+            polly()
                 .retry()
                 .execute(function () {
                     count++;
@@ -47,7 +47,7 @@ describe('The retry policy with a synchronous call', function () {
         var count = 0;
 
         try {
-            polly
+            polly()
                 .retry(5)
                 .execute(function () {
                     count++;
@@ -63,7 +63,7 @@ describe('The retry policy with a synchronous call', function () {
     it('should retry once after an error and succeed', function () {
         var count = 0;
 
-        var result = polly
+        var result = polly()
             .retry()
             .execute(function () {
                 count++;
@@ -81,7 +81,7 @@ describe('The retry policy with a synchronous call', function () {
     it('should retry four after an error and succeed', function () {
         var count = 0;
 
-        var result = polly
+        var result = polly()
             .retry(5)
             .execute(function () {
                 count++;
@@ -94,6 +94,84 @@ describe('The retry policy with a synchronous call', function () {
 
         result.should.equal(42);
         count.should.equal(5);
+    });
+
+    it('should retry five times after an error and still fail when all should be handled', function () {
+        var count = 0;
+
+        try {
+            polly()
+                .handle(function() {
+                    return true;
+                })
+                .retry(5)
+                .execute(function () {
+                    count++;
+                    throw new Error("Wrong value");
+                });
+        }
+        catch (ex) {
+        }
+
+        count.should.equal(6);
+    });
+
+    it('should not retry times after an error and still fail when none should be handled', function () {
+        var count = 0;
+
+        try {
+            polly()
+                .handle(function() {
+                    return false;
+                })
+                .retry(5)
+                .execute(function () {
+                    count++;
+                    throw new Error("Wrong value");
+                });
+        }
+        catch (ex) {
+        }
+
+        count.should.equal(1);
+    });
+
+    it('should retry 2 times after an error and still fail when all should be handled', function () {
+        var count = 0;
+
+        try {
+            polly()
+                .handle(function() {
+                    return count <= 2;
+                })
+                .retry(5)
+                .execute(function () {
+                    count++;
+                    throw new Error("Wrong value");
+                });
+        }
+        catch (ex) {
+        }
+
+        count.should.equal(3);
+    });
+
+    it('ignore the handle call if it isnt parameter a function', function () {
+        var count = 0;
+
+        try {
+            polly()
+                .handle()
+                .retry(5)
+                .execute(function () {
+                    count++;
+                    throw new Error("Wrong value");
+                });
+        }
+        catch (ex) {
+        }
+
+        count.should.equal(6);
     });
 });
 
