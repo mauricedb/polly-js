@@ -134,12 +134,12 @@ describe('The wait and retry policy with a asynchronous node call', function () 
             });
     });
 
-    it('should retry once because we are handling the error', function (done) {
+    it('should retry once because we are handling the no such file or directory error', function (done) {
         var count = 0;
 
         polly()
             .handle(function(err) {
-                return err.code === 'ENOENT' && err.errno === -4058;
+                return err.code === 'ENOENT'
             })
             .waitAndRetry()
             .executeForNode(function (cb) {
@@ -154,12 +154,12 @@ describe('The wait and retry policy with a asynchronous node call', function () 
             });
     });
 
-    it('should now retry because we are not handling the error', function (done) {
+    it('should not retry because we are not handling the no such file or directory error', function (done) {
         var count = 0;
 
         polly()
             .handle(function(err) {
-                return err.code === 'ENOENT' && err.errno !== -4058;
+                return err.code !== 'ENOENT'
             })
             .waitAndRetry()
             .executeForNode(function (cb) {
