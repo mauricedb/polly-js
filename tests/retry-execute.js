@@ -95,5 +95,63 @@ describe('The retry policy with a synchronous call', function () {
         result.should.equal(42);
         count.should.equal(5);
     });
+
+    it('should retry five times after an error and still fail when all should be handled', function () {
+        var count = 0;
+
+        try {
+            polly()
+                .handle(function() {
+                    return true;
+                })
+                .retry(5)
+                .execute(function () {
+                    count++;
+                    throw new Error("Wrong value");
+                });
+        }
+        catch (ex) {
+        }
+
+        count.should.equal(6);
+    });
+
+    it('should not retry times after an error and still fail when none should be handled', function () {
+        var count = 0;
+
+        try {
+            polly()
+                .handle(function() {
+                    return false;
+                })
+                .retry(5)
+                .execute(function () {
+                    count++;
+                    throw new Error("Wrong value");
+                });
+        }
+        catch (ex) {
+        }
+
+        count.should.equal(1);
+    });
+
+    it('ignore the handle call if it isnt parameter a function', function () {
+        var count = 0;
+
+        try {
+            polly()
+                .handle()
+                .retry(5)
+                .execute(function () {
+                    count++;
+                    throw new Error("Wrong value");
+                });
+        }
+        catch (ex) {
+        }
+
+        count.should.equal(6);
+    });
 });
 

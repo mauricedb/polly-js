@@ -138,4 +138,46 @@ describe('The retry policy with a asynchronous promise call', function () {
                 count.should.equal(2);
             })
     });
+
+    it('should retry five times if handling the error after an error and still fail', function () {
+        var count = 0;
+
+        return polly()
+            .handle(function () {
+                return true;
+            })
+            .retry(5)
+            .executeForPromise(function () {
+                return new Promise(function (resolve, reject) {
+                    count++;
+                    reject(new Error("Wrong value"));
+                });
+            })
+            .should.eventually
+            .be.rejected
+            .then(function () {
+                count.should.equal(6);
+            });
+    });
+
+    it('should not retry if not handling the error and still fail', function () {
+        var count = 0;
+
+        return polly()
+            .handle(function () {
+                return false;
+            })
+            .retry(5)
+            .executeForPromise(function () {
+                return new Promise(function (resolve, reject) {
+                    count++;
+                    reject(new Error("Wrong value"));
+                });
+            })
+            .should.eventually
+            .be.rejected
+            .then(function () {
+                count.should.equal(1);
+            });
+    });
 });

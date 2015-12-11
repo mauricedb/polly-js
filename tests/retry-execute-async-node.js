@@ -112,4 +112,44 @@ describe('The retry policy with a asynchronous node call', function () {
                 done();
             });
     });
+
+    it('should retry five times if handling the error after an error and still fail', function (done) {
+        var count = 0;
+
+        polly()
+            .handle(function(){
+                return true;
+            })
+            .retry(5)
+            .executeForNode(function (cb) {
+                count++;
+                fs.readFile(path.join(__dirname, './not-there.txt'), cb);
+            }, function (err, data) {
+                should.exist(err);
+                err.should.be.instanceof(Error);
+                should.not.exist(data);
+                count.should.equal(6);
+                done();
+            });
+    });
+
+    it('should not retry if not handling the error and still fail', function (done) {
+        var count = 0;
+
+        polly()
+            .handle(function(){
+                return false;
+            })
+            .retry(5)
+            .executeForNode(function (cb) {
+                count++;
+                fs.readFile(path.join(__dirname, './not-there.txt'), cb);
+            }, function (err, data) {
+                should.exist(err);
+                err.should.be.instanceof(Error);
+                should.not.exist(data);
+                count.should.equal(1);
+                done();
+            });
+    });
 });

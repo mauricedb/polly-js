@@ -18,6 +18,10 @@
 }(this, function () {
     'use strict';
 
+    var defaults = {
+        delay: 100
+    };
+
     function execute(config, cb) {
         var count = 0;
 
@@ -26,7 +30,7 @@
                 return cb();
             }
             catch (ex) {
-                if (count < config.count) {
+                if (count < config.count && config.handleFn(ex)) {
                     count++;
                 } else {
                     throw ex;
@@ -45,7 +49,7 @@
                 original.then(function (e) {
                     resolve(e);
                 }, function (e) {
-                    if (count < config.count) {
+                    if (count < config.count && config.handleFn(e)) {
                         count++;
                         execute();
                     } else {
@@ -69,7 +73,7 @@
                 }, function (e) {
                     var delay = config.delays.shift();
 
-                    if (delay) {
+                    if (delay && config.handleFn(e)) {
                         setTimeout(execute, delay);
                     } else {
                         reject(e);
@@ -86,7 +90,7 @@
         var count = 0;
 
         function internalCallback(err, data) {
-            if (err && count < config.count) {
+            if (err && count < config.count && config.handleFn(err)) {
                 count++;
                 fn(internalCallback);
             } else {
@@ -102,7 +106,7 @@
 
         function internalCallback(err, data) {
             var delay = config.delays.shift();
-            if (err && delay) {
+            if (err && delay && config.handleFn(err)) {
                 setTimeout(function () {
                     fn(internalCallback);
                 }, delay);
@@ -113,10 +117,6 @@
 
         fn(internalCallback);
     }
-
-    var defaults = {
-        delay: 100
-    };
 
     function delayCountToDelays(count) {
         var delays = [], delay = defaults.delay;
@@ -130,12 +130,26 @@
     }
 
     var pollyFn = function () {
+        var config = {
+            count: 1,
+            delays: [defaults.delay],
+            handleFn: function () {
+                return true;
+            }
+        };
+
         return {
-            defaults: defaults,
+            handle: function (handleFn) {
+                if (typeof handleFn === 'function') {
+                    config.handleFn = handleFn;
+                }
+
+                return this;
+            },
             retry: function (count) {
-                var config = {
-                    count: count || 1
-                };
+                if (Number.isInteger(count)) {
+                    config.count = count;
+                }
 
                 return {
                     execute: execute.bind(null, config),
@@ -148,13 +162,9 @@
                     delays = delayCountToDelays(delays);
                 }
 
-                if (!Array.isArray(delays)) {
-                    delays = [defaults.delay];
+                if (Array.isArray(delays)) {
+                    config.delays = delays;
                 }
-
-                var config = {
-                    delays: delays
-                };
 
                 return {
                     executeForPromise: executeForPromiseWithDelay.bind(null, config),
