@@ -17,7 +17,7 @@ describe('The wait and retry policy with a asynchronous node call', function () 
 
     it('should return the result when no error', function (done) {
 
-        polly
+        polly()
             .waitAndRetry()
             .executeForNode(function (cb) {
                 fs.readFile(path.join(__dirname, './hello.txt'), cb);
@@ -30,7 +30,7 @@ describe('The wait and retry policy with a asynchronous node call', function () 
 
     it('should reject after an error', function (done) {
 
-        polly
+        polly()
             .waitAndRetry()
             .executeForNode(function (cb) {
                 fs.readFile(path.join(__dirname, './not-there.txt'), cb);
@@ -45,7 +45,7 @@ describe('The wait and retry policy with a asynchronous node call', function () 
     it('should retry once after an error and still fail', function (done) {
         var count = 0;
 
-        polly
+        polly()
             .waitAndRetry()
             .executeForNode(function (cb) {
                 count++;
@@ -62,7 +62,7 @@ describe('The wait and retry policy with a asynchronous node call', function () 
     it('should retry five times after an error and still fail', function (done) {
         var count = 0;
 
-        polly
+        polly()
             .waitAndRetry([1, 1, 1, 1, 1])
             .executeForNode(function (cb) {
                 count++;
@@ -79,7 +79,7 @@ describe('The wait and retry policy with a asynchronous node call', function () 
     it('should retry five times after an error and still fail', function (done) {
         var count = 0;
 
-        polly
+        polly()
             .waitAndRetry(5)
             .executeForNode(function (cb) {
                 count++;
@@ -96,7 +96,7 @@ describe('The wait and retry policy with a asynchronous node call', function () 
     it('should retry once after an error and succeed', function (done) {
         var count = 0;
 
-        polly
+        polly()
             .waitAndRetry()
             .executeForNode(function (cb) {
 
@@ -117,7 +117,7 @@ describe('The wait and retry policy with a asynchronous node call', function () 
     it('should retry four times after an error and succeed', function (done) {
         var count = 0;
 
-        polly
+        polly()
             .waitAndRetry(5)
             .executeForNode(function (cb) {
                 count++;

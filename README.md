@@ -17,7 +17,7 @@ Polly-js is a library to help developers recover from transient errors using pol
 Try to load the Google home page and retry twice if it fails
 
 ```JavaScript
-polly
+polly()
     .retry(2)
     .executeForPromise(function () {
         return requestPromise('http://www.google.com');
@@ -30,7 +30,7 @@ polly
 ```
 
 ```JavaScript
-polly
+polly()
     .retry(2)
     .executeForNode(function (cb) {
         fs.readFile(path.join(__dirname, './hello.txt'), cb);

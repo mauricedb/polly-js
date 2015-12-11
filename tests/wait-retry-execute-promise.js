@@ -11,13 +11,13 @@ var polly = require('..');
 
 describe('The wait and retry policy with a asynchronous promise call', function () {
 
-    beforeEach(function() {
+    beforeEach(function () {
         polly.defaults.delay = 1;
     });
 
     it('should return the result when no error', function () {
 
-        return polly
+        return polly()
             .waitAndRetry()
             .executeForPromise(function () {
                 return Promise.resolve(42);
@@ -27,7 +27,7 @@ describe('The wait and retry policy with a asynchronous promise call', function 
 
     it('should reject after an error', function () {
 
-        return polly
+        return polly()
             .waitAndRetry()
             .executeForPromise(function () {
                 return Promise.reject(new Error("Wrong value"));
@@ -39,7 +39,7 @@ describe('The wait and retry policy with a asynchronous promise call', function 
     it('should retry once after an error and still fail', function () {
         var count = 0;
 
-        return polly
+        return polly()
             .waitAndRetry()
             .executeForPromise(function () {
                 return new Promise(function (resolve, reject) {
@@ -57,7 +57,7 @@ describe('The wait and retry policy with a asynchronous promise call', function 
     it('should retry five times after an error and still fail', function () {
         var count = 0;
 
-        return polly
+        return polly()
             .waitAndRetry([1, 1, 1, 1, 1])
             .executeForPromise(function () {
                 return new Promise(function (resolve, reject) {
@@ -75,7 +75,7 @@ describe('The wait and retry policy with a asynchronous promise call', function 
     it('should retry once after an error and succeed', function () {
         var count = 0;
 
-        return polly
+        return polly()
             .waitAndRetry()
             .executeForPromise(function () {
                 return new Promise(function (resolve, reject) {
@@ -96,7 +96,7 @@ describe('The wait and retry policy with a asynchronous promise call', function 
     it('should retry four times specifying delays after an error and succeed', function () {
         var count = 0;
 
-        return polly
+        return polly()
             .waitAndRetry([1, 1, 1, 1, 1])
             .executeForPromise(function () {
                 return new Promise(function (resolve, reject) {
@@ -117,7 +117,7 @@ describe('The wait and retry policy with a asynchronous promise call', function 
     it('should retry four times specifying the number after an error and succeed', function () {
         var count = 0;
 
-        return polly
+        return polly()
             .waitAndRetry(5)
             .executeForPromise(function () {
                 return new Promise(function (resolve, reject) {
@@ -138,7 +138,7 @@ describe('The wait and retry policy with a asynchronous promise call', function 
     it('we can load html from Google', function () {
         var count = 0;
 
-        return polly
+        return polly()
             .waitAndRetry()
             .executeForPromise(function () {
                 count++;
@@ -153,7 +153,7 @@ describe('The wait and retry policy with a asynchronous promise call', function 
     it('we can\'t load html from an invalid URL', function () {
         var count = 0;
 
-        return polly
+        return polly()
             .waitAndRetry()
             .executeForPromise(function () {
                 count++;

@@ -6,7 +6,7 @@ var polly = require('..');
 describe('The retry policy with a synchronous call', function () {
     it('should return the result when no error', function () {
 
-        var result = polly
+        var result = polly()
             .retry()
             .execute(function () {
                 return 42;
@@ -18,7 +18,7 @@ describe('The retry policy with a synchronous call', function () {
     it('should throw after an error', function () {
 
         (function () {
-            polly
+            polly()
                 .retry()
                 .execute(function () {
                     throw new Error("Wrong value");
@@ -30,7 +30,7 @@ describe('The retry policy with a synchronous call', function () {
         var count = 0;
 
         try {
-            polly
+            polly()
                 .retry()
                 .execute(function () {
                     count++;
@@ -47,7 +47,7 @@ describe('The retry policy with a synchronous call', function () {
         var count = 0;
 
         try {
-            polly
+            polly()
                 .retry(5)
                 .execute(function () {
                     count++;
@@ -63,7 +63,7 @@ describe('The retry policy with a synchronous call', function () {
     it('should retry once after an error and succeed', function () {
         var count = 0;
 
-        var result = polly
+        var result = polly()
             .retry()
             .execute(function () {
                 count++;
@@ -81,7 +81,7 @@ describe('The retry policy with a synchronous call', function () {
     it('should retry four after an error and succeed', function () {
         var count = 0;
 
-        var result = polly
+        var result = polly()
             .retry(5)
             .execute(function () {
                 count++;

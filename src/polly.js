@@ -118,7 +118,7 @@
         delay: 100
     };
 
-    function delayCountToDelays(count){
+    function delayCountToDelays(count) {
         var delays = [], delay = defaults.delay;
 
         for (var i = 0; i < count; i++) {
@@ -129,36 +129,41 @@
         return delays;
     }
 
-    return {
-        defaults: defaults,
-        retry: function (count) {
-            var config = {
-                count: count || 1
-            };
+    var pollyFn = function () {
+        return {
+            defaults: defaults,
+            retry: function (count) {
+                var config = {
+                    count: count || 1
+                };
 
-            return {
-                execute: execute.bind(null, config),
-                executeForPromise: executeForPromise.bind(null, config),
-                executeForNode: executeForNode.bind(null, config)
-            };
-        },
-        waitAndRetry: function (delays) {
-            if (Number.isInteger(delays)) {
-                delays = delayCountToDelays(delays);
+                return {
+                    execute: execute.bind(null, config),
+                    executeForPromise: executeForPromise.bind(null, config),
+                    executeForNode: executeForNode.bind(null, config)
+                };
+            },
+            waitAndRetry: function (delays) {
+                if (Number.isInteger(delays)) {
+                    delays = delayCountToDelays(delays);
+                }
+
+                if (!Array.isArray(delays)) {
+                    delays = [defaults.delay];
+                }
+
+                var config = {
+                    delays: delays
+                };
+
+                return {
+                    executeForPromise: executeForPromiseWithDelay.bind(null, config),
+                    executeForNode: executeForNodeWithDelay.bind(null, config)
+                };
             }
+        };
+    };
+    pollyFn.defaults = defaults;
 
-            if (!Array.isArray(delays)) {
-                delays = [defaults.delay];
-            }
-
-            var config = {
-                delays: delays
-            };
-
-            return {
-                executeForPromise: executeForPromiseWithDelay.bind(null, config),
-                executeForNode: executeForNodeWithDelay.bind(null, config)
-            };
-        }
-    }
+    return pollyFn;
 }));

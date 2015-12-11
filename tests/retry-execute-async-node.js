@@ -13,7 +13,7 @@ var polly = require('..');
 describe('The retry policy with a asynchronous node call', function () {
     it('should return the result when no error', function (done) {
 
-        polly
+        polly()
             .retry()
             .executeForNode(function (cb) {
                 fs.readFile(path.join(__dirname, './hello.txt'), cb);
@@ -26,7 +26,7 @@ describe('The retry policy with a asynchronous node call', function () {
 
     it('should reject after an error', function (done) {
 
-        polly
+        polly()
             .retry()
             .executeForNode(function (cb) {
                 fs.readFile(path.join(__dirname, './not-there.txt'), cb);
@@ -41,7 +41,7 @@ describe('The retry policy with a asynchronous node call', function () {
     it('should retry once after an error and still fail', function (done) {
         var count = 0;
 
-        polly
+        polly()
             .retry()
             .executeForNode(function (cb) {
                 count++;
@@ -58,7 +58,7 @@ describe('The retry policy with a asynchronous node call', function () {
     it('should retry five times after an error and still fail', function (done) {
         var count = 0;
 
-        polly
+        polly()
             .retry(5)
             .executeForNode(function (cb) {
                 count++;
@@ -75,7 +75,7 @@ describe('The retry policy with a asynchronous node call', function () {
     it('should retry once after an error and succeed', function (done) {
         var count = 0;
 
-        polly
+        polly()
             .retry()
             .executeForNode(function (cb) {
 
@@ -93,10 +93,10 @@ describe('The retry policy with a asynchronous node call', function () {
             });
     });
 
-    it('should retry four times after an error and succeed', function(done ) {
+    it('should retry four times after an error and succeed', function (done) {
         var count = 0;
 
-        polly
+        polly()
             .retry(5)
             .executeForNode(function (cb) {
                 count++;
@@ -105,7 +105,7 @@ describe('The retry policy with a asynchronous node call', function () {
                 } else {
                     cb(undefined, 42);
                 }
-            }, function(err, data)  {
+            }, function (err, data) {
                 should.not.exist(err);
                 data.should.equal(42);
                 count.should.equal(5);

@@ -12,7 +12,7 @@ var polly = require('..');
 describe('The retry policy with a asynchronous promise call', function () {
     it('should return the result when no error', function () {
 
-        return polly
+        return polly()
             .retry()
             .executeForPromise(function () {
                 return Promise.resolve(42);
@@ -22,7 +22,7 @@ describe('The retry policy with a asynchronous promise call', function () {
 
     it('should reject after an error', function () {
 
-        return polly
+        return polly()
             .retry()
             .executeForPromise(function () {
                 return Promise.reject(new Error("Wrong value"));
@@ -34,7 +34,7 @@ describe('The retry policy with a asynchronous promise call', function () {
     it('should retry once after an error and still fail', function () {
         var count = 0;
 
-        return polly
+        return polly()
             .retry()
             .executeForPromise(function () {
                 return new Promise(function (resolve, reject) {
@@ -52,7 +52,7 @@ describe('The retry policy with a asynchronous promise call', function () {
     it('should retry five times after an error and still fail', function () {
         var count = 0;
 
-        return polly
+        return polly()
             .retry(5)
             .executeForPromise(function () {
                 return new Promise(function (resolve, reject) {
@@ -70,7 +70,7 @@ describe('The retry policy with a asynchronous promise call', function () {
     it('should retry once after an error and succeed', function () {
         var count = 0;
 
-        return polly
+        return polly()
             .retry()
             .executeForPromise(function () {
                 return new Promise(function (resolve, reject) {
@@ -91,7 +91,7 @@ describe('The retry policy with a asynchronous promise call', function () {
     it('should retry four times after an error and succeed', function () {
         var count = 0;
 
-        return polly
+        return polly()
             .retry(5)
             .executeForPromise(function () {
                 return new Promise(function (resolve, reject) {
@@ -112,7 +112,7 @@ describe('The retry policy with a asynchronous promise call', function () {
     it('we can load html from Google', function () {
         var count = 0;
 
-        return polly
+        return polly()
             .retry()
             .executeForPromise(function () {
                 count++;
@@ -127,7 +127,7 @@ describe('The retry policy with a asynchronous promise call', function () {
     it('we can\'t load html from an invalid URL', function () {
         var count = 0;
 
-        return polly
+        return polly()
             .retry()
             .executeForPromise(function () {
                 count++;
