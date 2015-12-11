@@ -14,7 +14,7 @@ Polly-js is a library to help developers recover from transient errors using pol
 
 ## Usage
 
-Try to load the Google home page and retry twice if it fails
+Try to load the Google home page and retry twice if it fails.
 
 ```JavaScript
 polly()
@@ -29,6 +29,8 @@ polly()
     });
 ```
 
+Try to read a file from disk and retry twice if this fails.
+
 ```JavaScript
 polly()
     .retry(2)
@@ -37,6 +39,25 @@ polly()
     }, function (err, data) {
         if (err) {
             console.error('Failed trying three times', err)
+        } else {
+            console.log(data)
+        }
+    });
+```
+
+Only retry 'no such file or directory' errors. Wait 100 ms before retrying.
+
+```JavaScript
+polly()
+    .handle(function(err) {
+        return err.code === 'ENOENT' && err.errno === -4058;
+    })
+    .waitAndRetry()
+    .executeForNode(function (cb) {
+        fs.readFile(path.join(__dirname, './not-there.txt'), cb);
+    }, function (err, data) {
+        if (err) {
+            console.error('Failed trying twice with a 100ms delay', err)
         } else {
             console.log(data)
         }

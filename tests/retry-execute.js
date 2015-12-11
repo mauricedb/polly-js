@@ -136,6 +136,26 @@ describe('The retry policy with a synchronous call', function () {
         count.should.equal(1);
     });
 
+    it('should retry 2 times after an error and still fail when all should be handled', function () {
+        var count = 0;
+
+        try {
+            polly()
+                .handle(function() {
+                    return count <= 2;
+                })
+                .retry(5)
+                .execute(function () {
+                    count++;
+                    throw new Error("Wrong value");
+                });
+        }
+        catch (ex) {
+        }
+
+        count.should.equal(3);
+    });
+
     it('ignore the handle call if it isnt parameter a function', function () {
         var count = 0;
 

@@ -133,4 +133,44 @@ describe('The wait and retry policy with a asynchronous node call', function () 
                 done();
             });
     });
+
+    it('should retry once because we are handling the error', function (done) {
+        var count = 0;
+
+        polly()
+            .handle(function(err) {
+                return err.code === 'ENOENT' && err.errno === -4058;
+            })
+            .waitAndRetry()
+            .executeForNode(function (cb) {
+                count++;
+                fs.readFile(path.join(__dirname, './not-there.txt'), cb);
+            }, function (err, data) {
+                should.exist(err);
+                err.should.be.instanceof(Error);
+                should.not.exist(data);
+                count.should.equal(2);
+                done();
+            });
+    });
+
+    it('should now retry because we are not handling the error', function (done) {
+        var count = 0;
+
+        polly()
+            .handle(function(err) {
+                return err.code === 'ENOENT' && err.errno !== -4058;
+            })
+            .waitAndRetry()
+            .executeForNode(function (cb) {
+                count++;
+                fs.readFile(path.join(__dirname, './not-there.txt'), cb);
+            }, function (err, data) {
+                should.exist(err);
+                err.should.be.instanceof(Error);
+                should.not.exist(data);
+                count.should.equal(1);
+                done();
+            });
+    });
 });
