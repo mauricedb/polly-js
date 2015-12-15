@@ -50,7 +50,7 @@ Only retry 'no such file or directory' errors. Wait 100 ms before retrying.
 ```JavaScript
 polly()
     .handle(function(err) {
-        return err.code === 'ENOENT' && err.errno === -4058;
+        return err.code === 'ENOENT';
     })
     .waitAndRetry()
     .executeForNode(function (cb) {

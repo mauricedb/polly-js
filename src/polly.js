@@ -147,7 +147,7 @@
                 return this;
             },
             retry: function (count) {
-                if (Number.isInteger(count)) {
+                if (typeof count === 'number') {
                     config.count = count;
                 }
 
@@ -158,7 +158,7 @@
                 };
             },
             waitAndRetry: function (delays) {
-                if (Number.isInteger(delays)) {
+                if (typeof delays === 'number') {
                     delays = delayCountToDelays(delays);
                 }
 
