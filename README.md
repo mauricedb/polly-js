@@ -11,6 +11,26 @@ Polly-js is a library to help developers recover from transient errors using pol
 
 ![Polly-js](https://raw.github.com/mauricedb/polly-js/master/images/polly-js-120.png)
 
+The typical use case for polly-js are retrying actions after they fail. These actions often include some form of IO which can fail.
+Examples of these IO actions are AJAX requests to other services, file operations on disk or interacting with a database.
+All these actions share the characteristics that they can occasionally fail because of circumstances outside of the control of your application like the network connection might be briefly unavailable or the file might be in use by another process.
+When any of these actions fail there is a change that just retrying the same action, possibly after a short delay, will work. Polly-js makes these retry actions easy to code.
+
+## Detecting failures
+Depending on the function being executed different ways of detecting failure are used.
+
+When you call ```polly().execute(<your function>)``` the code assumes that your code failed and needs to be retried when your function throws an Error.
+
+When you call ```polly().executeForPromise(<your function>)``` the code assumes that your code failed and needs to be retried when your function returns a Promise that is rejected.
+
+When you call ```polly().executeForNode(<your function that accepts a callback>)``` the code assumes that your code failed and needs to be retried when your function calls the callback with a first non null parameter indicating an error.
+
+## Deciding what to do on failure
+Whenever a failure is detected Polly-js will try attempt to retry your action. 
+
+You get to control how a failure is retried by calling either ```polly().retry()``` or ```polly().waitAndRetry()```. 
+Both will retry the failing action but the ```polly().waitAndRetry()``` option adds a small delay before retrying. 
+
 
 ## Usage
 
