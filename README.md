@@ -30,6 +30,14 @@ Whenever a failure is detected Polly-js will try attempt to retry your action.
 
 You get to control how a failure is retried by calling either ```polly().retry()``` or ```polly().waitAndRetry()```. 
 Both will retry the failing action but the ```polly().waitAndRetry()``` option adds a small delay before retrying. 
+In general ```polly().waitAndRetry()``` is probably the more appropriate policy to use as retrying without  apause could cause a lot requests.
+By default both will retry once where ```polly().waitAndRetry()``` waits 100 ms before retrying. With either function you can specify a number of retries to attempt on repeated failures.
+With ```polly().waitAndRetry()``` it will double the time between each try. If you want to control the exact delays you can also specify and array with the individual delay values.
+So ```polly().waitAndRetry(5)``` is equivalent to ```polly().waitAndRetry([100, 200, 400, 800, 1600])```.
+
+##Deciding what failures to retry
+Using ```polly().handle(<function>)``` you can decide if you want to retry a specific failure. For example you might want to retry an AJAX request returning a 404 response code but not one resulting in a 500 response code.
+The callback function specified in ```polly().handle()``` is called with watever error was received so you can use any property from there and you return true if you want to retry the action or false to stop retrying. 
 
 
 ## Usage
