@@ -1,0 +1,26 @@
+{
+  "name": "polly-js",
+  "description": "Transient exception handling",
+  "main": "src/polly.js",
+  "authors": [
+    "Maurice de Beijer"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "transient",
+    "exception",
+    "handling",
+    "error",
+    "try",
+    "catch",
+    "promise"
+  ],
+  "homepage": "https://github.com/mauricedb/polly-js",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
