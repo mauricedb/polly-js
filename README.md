@@ -2,6 +2,7 @@
 Transient exception handling for JavaScript made easy.
 
 [![npm version](https://img.shields.io/npm/v/polly-js.svg?style=flat-square)](https://www.npmjs.org/package/polly-js)
+[![Bower](https://img.shields.io/bower/v/bootstrap.svg?maxAge=2592000)](https://github.com/mauricedb/polly-js)
 [![npm downloads](https://img.shields.io/npm/dm/polly-js.svg?style=flat-square)](http://npm-stat.com/charts.html?package=polly-js&from=2015-09-01)
 [![Dependency Status](https://david-dm.org/mauricedb/polly-js.svg)](https://david-dm.org/mauricedb/polly-js)
 [![Build Status](https://travis-ci.org/mauricedb/polly-js.svg?branch=master)](https://travis-ci.org/mauricedb/polly-js)
