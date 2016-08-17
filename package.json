@@ -35,6 +35,6 @@
     "gulp-mocha": "3.0.0",
     "istanbul": "0.4.4",
     "mocha": "3.0.2",
-    "request-promise": "4.1.0"
+    "request-promise": "4.1.1"
   }
 }
