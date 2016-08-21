@@ -33,7 +33,7 @@
     "codecov.io": "0.1.6",
     "gulp": "3.9.0",
     "gulp-mocha": "3.0.1",
-    "istanbul": "0.4.4",
+    "istanbul": "0.4.5",
     "mocha": "3.0.2",
     "request-promise": "4.1.1"
   }
