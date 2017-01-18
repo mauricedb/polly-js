@@ -1,42 +1,41 @@
 {
-    "name": "polly-js",
-    "version": "1.3.7",
-    "description": "Transient exception handling",
-    "main": "src/polly.js",
-    "typings": "d.ts/polly-js.d.ts",
-
-    "scripts": {
-        "test": "istanbul cover ./node_modules/mocha/bin/_mocha tests",
-        "test:watch": "mocha tests --watch",
-        "report-coverage": "cat ./coverage/lcov.info | ./node_modules/.bin/codecov"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/mauricedb/polly-js.git"
-    },
-    "keywords": [
-        "transient",
-        "exception",
-        "handling",
-        "error",
-        "try",
-        "catch",
-        "promise"
-    ],
-    "author": "Maurice de Beijer",
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/mauricedb/polly-js/issues"
-    },
-    "homepage": "https://github.com/mauricedb/polly-js#readme",
-    "devDependencies": {
-        "chai": "3.3.0",
-        "chai-as-promised": "6.0.0",
-        "codecov.io": "0.1.6",
-        "gulp": "3.9.0",
-        "gulp-mocha": "3.0.1",
-        "istanbul": "0.4.5",
-        "mocha": "3.2.0",
-        "request-promise": "4.1.1"
-    }
+  "name": "polly-js",
+  "version": "1.4.0",
+  "description": "Transient exception handling",
+  "main": "src/polly.js",
+  "typings": "d.ts/polly-js.d.ts",
+  "scripts": {
+    "test": "istanbul cover ./node_modules/mocha/bin/_mocha tests",
+    "test:watch": "mocha tests --watch",
+    "report-coverage": "cat ./coverage/lcov.info | ./node_modules/.bin/codecov"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mauricedb/polly-js.git"
+  },
+  "keywords": [
+    "transient",
+    "exception",
+    "handling",
+    "error",
+    "try",
+    "catch",
+    "promise"
+  ],
+  "author": "Maurice de Beijer",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mauricedb/polly-js/issues"
+  },
+  "homepage": "https://github.com/mauricedb/polly-js#readme",
+  "devDependencies": {
+    "chai": "3.3.0",
+    "chai-as-promised": "6.0.0",
+    "codecov.io": "0.1.6",
+    "gulp": "3.9.0",
+    "gulp-mocha": "3.0.1",
+    "istanbul": "0.4.5",
+    "mocha": "3.2.0",
+    "request-promise": "4.1.1"
+  }
 }
