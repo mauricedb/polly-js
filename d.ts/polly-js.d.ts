@@ -10,7 +10,7 @@ declare interface Retryable extends AsyncRetryable {
 declare interface Polly {
     handle(fn: Function): Polly
     retry(): Retryable
-    waitAndRetry(delays): AsyncRetryable
+    waitAndRetry(delays:any): AsyncRetryable
 }
 
 declare var polly: () => Polly;
