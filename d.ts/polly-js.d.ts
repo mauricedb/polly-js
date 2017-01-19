@@ -16,5 +16,5 @@ declare interface Polly {
 declare var polly: () => Polly;
 
 declare module "polly-js" {
-    export = polly;
+    export default polly;
 }
