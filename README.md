@@ -1,4 +1,6 @@
 # polly-js
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/mauricedb/polly-js.svg)](https://greenkeeper.io/)
 Transient exception handling for JavaScript made easy.
 
 [![npm version](https://img.shields.io/npm/v/polly-js.svg?style=flat-square)](https://www.npmjs.org/package/polly-js)
