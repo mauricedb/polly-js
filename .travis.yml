@@ -1,9 +1,9 @@
 language: node_js
 node_js:
   - "node"
-  - "iojs"
-  - "4.1"
-  - "4.0"
-  - "0.12"
+  - "7"
+  - "6"
+  - "5"
+  - "4"
 after_success:
   - npm run report-coverage
