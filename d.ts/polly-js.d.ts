@@ -1,6 +1,6 @@
 declare interface AsyncRetryable {
-    executeForPromise(fn: Function): any
-    executeForNode(fn: Function): any
+    executeForPromise<T>(fn: (any) => Promise<T>): Promise<T>
+    executeForNode(fn: (err?: object, data?: any) => any, cb?: (err?: object, data?: any) => any): void
 }
 
 declare interface Retryable extends AsyncRetryable {
@@ -8,9 +8,10 @@ declare interface Retryable extends AsyncRetryable {
 }
 
 declare interface Polly {
-    handle(fn: Function): Polly
-    retry(): Retryable
-    waitAndRetry(delays:any): AsyncRetryable
+    handle(fn: (err: any) => boolean): Polly
+    retry(numRetries: number): Retryable
+    waitAndRetry(delays: number[]): AsyncRetryable
+    waitAndRetry(numRetries : number): AsyncRetryable
 }
 
 declare var polly: () => Polly;
