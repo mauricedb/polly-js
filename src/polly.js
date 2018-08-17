@@ -44,7 +44,7 @@
 
         return new Promise(function (resolve, reject) {
             function execute() {
-                var original = cb();
+                var original = cb(count);
 
                 original.then(function (e) {
                     resolve(e);
