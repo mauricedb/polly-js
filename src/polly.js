@@ -27,7 +27,7 @@
 
         while (true) {
             try {
-                return cb();
+                return cb(count);
             }
             catch (ex) {
                 if (count < config.count && config.handleFn(ex)) {
@@ -63,10 +63,11 @@
     }
 
     function executeForPromiseWithDelay(config, cb) {
+        var count = 0;
 
         return new Promise(function (resolve, reject) {
             function execute() {
-                var original = cb();
+                var original = cb(count);
 
                 original.then(function (e) {
                     resolve(e);
@@ -74,6 +75,7 @@
                     var delay = config.delays.shift();
 
                     if (delay && config.handleFn(e)) {
+                        count++;
                         setTimeout(execute, delay);
                     } else {
                         reject(e);
