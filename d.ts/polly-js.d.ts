@@ -1,5 +1,5 @@
 declare interface AsyncRetryable {
-    executeForPromise<T>(fn: (any) => Promise<T>): Promise<T>
+    executeForPromise<T>(fn: () => Promise<T>): Promise<T>
     executeForNode(fn: (err?: object, data?: any) => any, cb?: (err?: object, data?: any) => any): void
 }
 
