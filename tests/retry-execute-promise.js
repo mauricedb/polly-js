@@ -32,50 +32,50 @@ describe('The retry policy with a asynchronous promise call', function () {
     });
 
     it('should retry once after an error and still fail', function () {
-        var count = 0;
+        var actualRetryCount = 0;
 
         return polly()
             .retry()
-            .executeForPromise(function () {
+            .executeForPromise(function ({count}) {
                 return new Promise(function (resolve, reject) {
-                    count++;
+                    actualRetryCount = count;
                     reject(new Error("Wrong value"));
                 });
             })
             .should.eventually
             .be.rejected
             .then(function () {
-                count.should.equal(2);
+                actualRetryCount.should.equal(1);
             });
     });
 
     it('should retry five times after an error and still fail', function () {
-        var count = 0;
+        var actualRetryCount = 0;
 
         return polly()
             .retry(5)
-            .executeForPromise(function () {
+            .executeForPromise(function ({count}) {
                 return new Promise(function (resolve, reject) {
-                    count++;
+                    actualRetryCount = count;
                     reject(new Error("Wrong value"));
                 });
             })
             .should.eventually
             .be.rejected
             .then(function () {
-                count.should.equal(6);
+                actualRetryCount.should.equal(5);
             });
     });
 
     it('should retry once after an error and succeed', function () {
-        var count = 0;
+        var actualRetryCount = 0;
 
         return polly()
             .retry()
-            .executeForPromise(function () {
+            .executeForPromise(function ({count}) {
                 return new Promise(function (resolve, reject) {
-                    count++;
-                    if (count === 1) {
+                    actualRetryCount = count;
+                    if (count < 1) {
                         reject(new Error("Wrong value"));
                     } else {
                         resolve(42);
@@ -84,19 +84,19 @@ describe('The retry policy with a asynchronous promise call', function () {
             })
             .should.eventually.equal(42)
             .then(function () {
-                count.should.equal(2);
+                actualRetryCount.should.equal(1);
             });
     });
 
     it('should retry four times after an error and succeed', function () {
-        var count = 0;
+        var actualRetryCount = 0;
 
         return polly()
             .retry(5)
-            .executeForPromise(function () {
+            .executeForPromise(function ({count}) {
                 return new Promise(function (resolve, reject) {
-                    count++;
-                    if (count < 5) {
+                    actualRetryCount = count;
+                    if (count < 4) {
                         reject(new Error("Wrong value"));
                     } else {
                         resolve(42);
@@ -105,79 +105,79 @@ describe('The retry policy with a asynchronous promise call', function () {
             })
             .should.eventually.equal(42)
             .then(function () {
-                count.should.equal(5);
+                actualRetryCount.should.equal(4);
             });
     });
 
     it('we can load html from Google', function () {
-        var count = 0;
+        var actualRetryCount = 0;
 
         return polly()
             .retry()
-            .executeForPromise(function () {
-                count++;
+            .executeForPromise(function ({count}) {
+                actualRetryCount = count;
                 return requestPromise('http://www.google.com');
             })
             .should.eventually.be.fulfilled
             .then(function () {
-                count.should.equal(1);
+                actualRetryCount.should.equal(0);
             })
     });
 
     it('we can\'t load html from an invalid URL', function () {
-        var count = 0;
+        var actualRetryCount = 0;
 
         return polly()
             .retry()
-            .executeForPromise(function () {
-                count++;
+            .executeForPromise(function ({count}) {
+                actualRetryCount = count;
                 return requestPromise('http://www.this-is-no-site.com');
             })
             .should.eventually.be.rejected
             .then(function () {
-                count.should.equal(2);
+                actualRetryCount.should.equal(1);
             })
     });
 
     it('should retry five times if handling the error after an error and still fail', function () {
-        var count = 0;
+        var actualRetryCount = 0;
 
         return polly()
             .handle(function () {
                 return true;
             })
             .retry(5)
-            .executeForPromise(function () {
+            .executeForPromise(function ({count}) {
                 return new Promise(function (resolve, reject) {
-                    count++;
+                    actualRetryCount = count;
                     reject(new Error("Wrong value"));
                 });
             })
             .should.eventually
             .be.rejected
             .then(function () {
-                count.should.equal(6);
+                actualRetryCount.should.equal(5);
             });
     });
 
     it('should not retry if not handling the error and still fail', function () {
-        var count = 0;
+        var actualRetryCount = 0;
 
         return polly()
             .handle(function () {
                 return false;
             })
             .retry(5)
-            .executeForPromise(function () {
+            .executeForPromise(function ({count}) {
                 return new Promise(function (resolve, reject) {
-                    count++;
+                    actualRetryCount = count;
                     reject(new Error("Wrong value"));
                 });
             })
             .should.eventually
             .be.rejected
             .then(function () {
-                count.should.equal(1);
+                actualRetryCount.should.equal(0);
             });
     });
 });
