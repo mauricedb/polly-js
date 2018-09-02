@@ -43,65 +43,65 @@ describe('The wait and retry policy with a asynchronous node call', function () 
     });
 
     it('should retry once after an error and still fail', function (done) {
-        var count = 0;
+        var actualRetryCount = 0;
 
         polly()
             .waitAndRetry()
-            .executeForNode(function (cb) {
-                count++;
+            .executeForNode(function (cb, {count}) {
+                actualRetryCount = count;
                 fs.readFile(path.join(__dirname, './not-there.txt'), cb);
             }, function (err, data) {
                 should.exist(err);
                 err.should.be.instanceof(Error);
                 should.not.exist(data);
-                count.should.equal(2);
+                actualRetryCount.should.equal(1);
                 done();
             });
     });
 
     it('should retry five times after an error and still fail', function (done) {
-        var count = 0;
+        var actualRetryCount = 0;
 
         polly()
             .waitAndRetry([1, 1, 1, 1, 1])
-            .executeForNode(function (cb) {
-                count++;
+            .executeForNode(function (cb, {count}) {
+                actualRetryCount = count;
                 fs.readFile(path.join(__dirname, './not-there.txt'), cb);
             }, function (err, data) {
                 should.exist(err);
                 err.should.be.instanceof(Error);
                 should.not.exist(data);
-                count.should.equal(6);
+                actualRetryCount.should.equal(5);
                 done();
             });
     });
 
     it('should retry five times after an error and still fail', function (done) {
-        var count = 0;
+        var actualRetryCount = 0;
 
         polly()
             .waitAndRetry(5)
-            .executeForNode(function (cb) {
-                count++;
+            .executeForNode(function (cb, {count}) {
+                actualRetryCount = count;
                 fs.readFile(path.join(__dirname, './not-there.txt'), cb);
             }, function (err, data) {
                 should.exist(err);
                 err.should.be.instanceof(Error);
                 should.not.exist(data);
-                count.should.equal(6);
+                actualRetryCount.should.equal(5);
                 done();
             });
     });
 
     it('should retry once after an error and succeed', function (done) {
-        var count = 0;
+        var actualRetryCount = 0;
 
         polly()
             .waitAndRetry()
-            .executeForNode(function (cb) {
+            .executeForNode(function (cb, {count}) {
 
-                count++;
-                if (count === 1) {
+                actualRetryCount = count;
+                if (actualRetryCount < 1) {
                     cb(new Error("Wrong value"));
                 } else {
                     cb(undefined, 42);
@@ -109,19 +109,19 @@ describe('The wait and retry policy with a asynchronous node call', function () 
             }, function (err, data) {
                 should.not.exist(err);
                 data.should.equal(42);
-                count.should.equal(2);
+                actualRetryCount.should.equal(1);
                 done();
             });
     });
 
     it('should retry four times after an error and succeed', function (done) {
-        var count = 0;
+        var actualRetryCount = 0;
 
         polly()
             .waitAndRetry(5)
-            .executeForNode(function (cb) {
-                count++;
-                if (count < 5) {
+            .executeForNode(function (cb, {count}) {
+                actualRetryCount = count;
+                if (actualRetryCount < 4) {
                     cb(new Error("Wrong value"));
                 } else {
                     cb(undefined, 42);
@@ -129,47 +129,47 @@ describe('The wait and retry policy with a asynchronous node call', function () 
             }, function (err, data) {
                 should.not.exist(err);
                 data.should.equal(42);
-                count.should.equal(5);
+                actualRetryCount.should.equal(4);
                 done();
             });
     });
 
     it('should retry once because we are handling the no such file or directory error', function (done) {
-        var count = 0;
+        var actualRetryCount = 0;
 
         polly()
             .handle(function(err) {
                 return err.code === 'ENOENT'
             })
             .waitAndRetry()
-            .executeForNode(function (cb) {
-                count++;
+            .executeForNode(function (cb, {count}) {
+                actualRetryCount = count;
                 fs.readFile(path.join(__dirname, './not-there.txt'), cb);
             }, function (err, data) {
                 should.exist(err);
                 err.should.be.instanceof(Error);
                 should.not.exist(data);
-                count.should.equal(2);
+                actualRetryCount.should.equal(1);
                 done();
             });
     });
 
     it('should not retry because we are not handling the no such file or directory error', function (done) {
-        var count = 0;
+        var actualRetryCount = 0;
 
         polly()
             .handle(function(err) {
                 return err.code !== 'ENOENT'
             })
             .waitAndRetry()
-            .executeForNode(function (cb) {
-                count++;
+            .executeForNode(function (cb, {count}) {
+                actualRetryCount = count;
                 fs.readFile(path.join(__dirname, './not-there.txt'), cb);
             }, function (err, data) {
                 should.exist(err);
                 err.should.be.instanceof(Error);
                 should.not.exist(data);
-                count.should.equal(1);
+                actualRetryCount.should.equal(0);
                 done();
             });
     });

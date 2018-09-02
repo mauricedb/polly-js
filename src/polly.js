@@ -27,7 +27,7 @@
 
         while (true) {
             try {
-                return cb();
+                return cb({count});
             }
             catch (ex) {
                 if (count < config.count && config.handleFn(ex)) {
@@ -44,7 +44,7 @@
 
         return new Promise(function (resolve, reject) {
             function execute() {
-                var original = cb();
+                var original = cb({count});
 
                 original.then(function (e) {
                     resolve(e);
@@ -63,10 +63,11 @@
     }
 
     function executeForPromiseWithDelay(config, cb) {
+        var count = 0;
 
         return new Promise(function (resolve, reject) {
             function execute() {
-                var original = cb();
+                var original = cb({count});
 
                 original.then(function (e) {
                     resolve(e);
@@ -74,6 +75,7 @@
                     var delay = config.delays.shift();
 
                     if (delay && config.handleFn(e)) {
+                        count++;
                         setTimeout(execute, delay);
                     } else {
                         reject(e);
@@ -92,30 +94,32 @@
         function internalCallback(err, data) {
             if (err && count < config.count && config.handleFn(err)) {
                 count++;
-                fn(internalCallback);
+                fn(internalCallback, {count});
             } else {
                 callback(err, data);
 
             }
         }
 
-        fn(internalCallback);
+        fn(internalCallback, {count});
     }
 
     function executeForNodeWithDelay(config, fn, callback) {
+        var count = 0;
 
         function internalCallback(err, data) {
             var delay = config.delays.shift();
             if (err && delay && config.handleFn(err)) {
+                count++;
                 setTimeout(function () {
-                    fn(internalCallback);
+                    fn(internalCallback, {count});
                 }, delay);
             } else {
                 callback(err, data);
             }
         }
 
-        fn(internalCallback);
+        fn(internalCallback, {count});
     }
 
     function delayCountToDelays(count) {
