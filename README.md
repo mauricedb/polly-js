@@ -94,6 +94,25 @@ polly()
     });
 ```
 
+Use async await with the browsers `fetch` API.
+
+```JavaScript
+const loadData = url => {
+  return polly()
+    .waitAndRetry(2)
+    .executeForPromise(async () => {
+      const rsp = await fetch(url);
+      if (rsp.ok) {
+        return rsp.json();
+      }
+      return Promise.reject(rsp);
+    });
+};
+
+// Using the function somewhere else:
+const movies = await loadData("http://localhost:3000/movies.json");
+```
+
 ## Acknowledgements
 
 The library is based on the [Polly NuGet package](https://www.nuget.org/packages/Polly/) by Michael Wolfenden
