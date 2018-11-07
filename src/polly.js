@@ -27,7 +27,7 @@
 
         while (true) {
             try {
-                return cb({count});
+                return cb({count: count});
             }
             catch (ex) {
                 if (count < config.count && config.handleFn(ex)) {
@@ -44,7 +44,7 @@
 
         return new Promise(function (resolve, reject) {
             function execute() {
-                var original = cb({count});
+                var original = cb({count: count});
 
                 original.then(function (e) {
                     resolve(e);
@@ -67,7 +67,7 @@
 
         return new Promise(function (resolve, reject) {
             function execute() {
-                var original = cb({count});
+                var original = cb({count: count});
 
                 original.then(function (e) {
                     resolve(e);
@@ -94,14 +94,14 @@
         function internalCallback(err, data) {
             if (err && count < config.count && config.handleFn(err)) {
                 count++;
-                fn(internalCallback, {count});
+                fn(internalCallback, {count: count});
             } else {
                 callback(err, data);
 
             }
         }
 
-        fn(internalCallback, {count});
+        fn(internalCallback, {count: count});
     }
 
     function executeForNodeWithDelay(config, fn, callback) {
@@ -112,14 +112,14 @@
             if (err && delay && config.handleFn(err)) {
                 count++;
                 setTimeout(function () {
-                    fn(internalCallback, {count});
+                    fn(internalCallback, {count: count});
                 }, delay);
             } else {
                 callback(err, data);
             }
         }
 
-        fn(internalCallback, {count});
+        fn(internalCallback, {count: count});
     }
 
     function delayCountToDelays(count) {
