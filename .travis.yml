@@ -3,7 +3,6 @@ node_js:
   - "node"
   - "10"
   - "8"
-  - "7"
   - "6"
 after_success:
   - npm run report-coverage
