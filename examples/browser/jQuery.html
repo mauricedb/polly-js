@@ -26,7 +26,7 @@
         }
 
         function loadUsers(url){
-            polly
+            polly()
                 .retry(5)
                 .executeForPromise(function () {
                     log('About to try and load users.');
