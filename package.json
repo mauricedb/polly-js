@@ -1,6 +1,6 @@
 {
   "name": "polly-js",
-  "version": "1.6.7",
+  "version": "1.6.8",
   "description": "Transient exception handling",
   "main": "src/polly.js",
   "typings": "d.ts/polly-js.d.ts",
