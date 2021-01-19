@@ -31,6 +31,7 @@
             }
             catch (ex) {
                 if (count < config.count && config.handleFn(ex)) {
+                    config.loggerFn(err);
                     count++;
                 } else {
                     throw ex;
@@ -50,6 +51,7 @@
                     resolve(e);
                 }, function (e) {
                     if (count < config.count && config.handleFn(e)) {
+                        config.loggerFn(err);
                         count++;
                         execute();
                     } else {
@@ -75,6 +77,7 @@
                     var delay = config.delays.shift();
 
                     if (delay && config.handleFn(e)) {
+                        config.loggerFn(err);
                         count++;
                         setTimeout(execute, delay);
                     } else {
@@ -93,11 +96,11 @@
 
         function internalCallback(err, data) {
             if (err && count < config.count && config.handleFn(err)) {
+                config.loggerFn(err);
                 count++;
                 fn(internalCallback, {count: count});
             } else {
                 callback(err, data);
-
             }
         }
 
@@ -110,6 +113,7 @@
         function internalCallback(err, data) {
             var delay = config.delays.shift();
             if (err && delay && config.handleFn(err)) {
+                config.loggerFn(err);
                 count++;
                 setTimeout(function () {
                     fn(internalCallback, {count: count});
@@ -139,10 +143,19 @@
             delays: [defaults.delay],
             handleFn: function () {
                 return true;
+            },
+            loggerFn: function(err) {
             }
         };
 
         return {
+            logger: function (loggerFn) {
+                if (typeof loggerFn === 'function') {
+                    config.loggerFn = loggerFn;
+                }
+
+                return this;
+            },
             handle: function (handleFn) {
                 if (typeof handleFn === 'function') {
                     config.handleFn = handleFn;

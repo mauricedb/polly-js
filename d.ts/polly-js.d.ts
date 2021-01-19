@@ -22,6 +22,7 @@ declare module 'polly-js' {
       }
 
       interface Polly {
+        logger (fn: (err: any) => void): Polly;
         handle (fn: (err: any) => boolean): Polly;
         retry (numRetries: number): Retryable;
         waitAndRetry (delays: number[]): AsyncRetryable;
