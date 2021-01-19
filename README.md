@@ -29,7 +29,7 @@ When you call ```polly().executeForPromise(<your function>)``` the code assumes 
 When you call ```polly().executeForNode(<your function that accepts a callback>)``` the code assumes that your code failed and needs to be retried when your function calls the callback with a first non null parameter indicating an error.
 
 ## Deciding what to do on failure
-Whenever a failure is detected Polly-js will try attempt to retry your action. 
+Whenever a failure is detected Polly-js will attempt to retry your action. 
 
 You get to control how a failure is retried by calling either ```polly().retry()``` or ```polly().waitAndRetry()```. 
 Both will retry the failing action but the ```polly().waitAndRetry()``` option adds a small delay before retrying. 
@@ -40,7 +40,6 @@ With ```polly().waitAndRetry()``` it will double the time between each try. If y
 ##Deciding what failures to retry
 Using ```polly().handle(<function>)``` you can decide if you want to retry a specific failure. For example you might want to retry an AJAX request returning a 404 response code but not one resulting in a 500 response code.
 The callback function specified in ```polly().handle()``` is called with watever error was received so you can use any property from there and you return true if you want to retry the action or false to stop retrying. 
-
 
 ## Usage
 
@@ -111,6 +110,24 @@ const loadData = url => {
 
 // Using the function somewhere else:
 const movies = await loadData("http://localhost:3000/movies.json");
+```
+
+## Logging errors
+You can set a logger function to be called every time an error is detected.
+```JavaScript
+polly()
+    .logger(function(err){
+        console.error(err); //will be hit 2 times
+    })
+    .retry(2)
+    .executeForPromise(function () {
+        return requestPromise('http://foo.bar.com');
+    })
+    .then(function(result) {
+        //do some important stuff here
+    }, function(err) {
+        console.error('Failed trying three times', err);//third error is passed back to the caller
+    });
 ```
 
 ## Acknowledgements
