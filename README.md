@@ -133,3 +133,8 @@ polly()
 ## Acknowledgements
 
 The library is based on the [Polly NuGet package](https://www.nuget.org/packages/Polly/) by Michael Wolfenden
+
+
+## See Also
+
+- [Cockatiel](https://www.npmjs.com/package/cockatiel): A more feature rich package that includes polies like Circuit Breaker, Timeout, Bulkhead Isolation, and Fallback.
