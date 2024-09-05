@@ -1,0 +1,33 @@
+name: Auto-Merge oldest Dependabot PR
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 5 * * *' # At 5:00 on every day-of-week
+
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup GitHub CLI
+        run: |
+          gh auth login --with-token <<< "${{ secrets.DEPENDABOT_MERGE_PAT }}"
+
+      - name: Find oldest mergeable Dependabot PR
+        id: find_pr
+        run: |
+          PR_URL=$(gh pr list --author dependabot[bot] --json url,mergeStateStatus --jq '.[] | select(.mergeStateStatus == "CLEAN") | .url' | tail -n 1)
+          if [ -z "$PR_URL" ]; then
+            echo "No eligible PRs found"
+            gh pr list --author dependabot[bot] --json url,mergeStateStatus
+            exit 0
+          fi
+          echo "Selected PR ${PR_URL} for merge"
+          echo "PR_URL=${PR_URL}" >> $GITHUB_OUTPUT
+
+      - name: Merge PR
+        if: steps.find_pr.outputs.PR_URL
+        run: gh pr merge --auto --merge "${{ steps.find_pr.outputs.PR_URL }}"
