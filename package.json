@@ -32,7 +32,7 @@
     "chai": "5.2.0",
     "chai-as-promised": "8.0.1",
     "codecov.io": "0.1.6",
-    "gulp": "5.0.0",
+    "gulp": "5.0.1",
     "gulp-mocha": "10.0.1",
     "istanbul": "0.4.5",
     "mocha": "11.5.0",
