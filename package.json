@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/mauricedb/polly-js#readme",
   "devDependencies": {
-    "chai": "5.3.1",
+    "chai": "6.0.1",
     "chai-as-promised": "8.0.2",
     "codecov.io": "0.1.6",
     "gulp": "5.0.1",
